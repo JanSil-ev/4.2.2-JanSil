@@ -1,0 +1,12 @@
+.appShell {
+  background-color: #F3F5FA;
+}
+
+.headerSection {
+  background: var(--mantine-color-white);
+}
+
+.mainSection {
+  background: var(--mantine-color-gray-0);
+  padding: var(--mantine-spacing-md);
+}
