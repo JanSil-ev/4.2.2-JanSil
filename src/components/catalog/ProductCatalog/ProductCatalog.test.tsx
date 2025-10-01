@@ -3,6 +3,8 @@ import ky from 'ky';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MantineProvider } from '@mantine/core';
 import { ProductCatalog } from '.';
+import { Provider } from 'react-redux';
+import { store } from '@/store';
 
 
 vi.mock('ky');
@@ -29,7 +31,7 @@ const mockProducts = [
 const mockAddCart = vi.fn();
 
 function renderWithMantine(ui: React.ReactElement) {
-  return render(<MantineProvider>{ui}</MantineProvider>);
+  return render(<Provider store={store}><MantineProvider>{ui}</MantineProvider></Provider>);
 }
 
 describe('ProductCatalog', () => {
@@ -42,7 +44,7 @@ describe('ProductCatalog', () => {
       json: () => new Promise(() => {}),
     });
 
-    renderWithMantine(<ProductCatalog addCart={mockAddCart} cartItems={[]} />);
+    renderWithMantine(<ProductCatalog/>);
 
     expect(screen.getByTestId('loader')).toBeInTheDocument();
   });
@@ -51,7 +53,7 @@ describe('ProductCatalog', () => {
     (ky.get as any).mockReturnValue({
       json: () => Promise.resolve(mockProducts),
     });
-    renderWithMantine(<ProductCatalog addCart={mockAddCart} cartItems={[]} />);
+    renderWithMantine(<ProductCatalog />);
     await waitFor(() => {
       expect(screen.getByText('Catalog')).toBeInTheDocument();
     });
@@ -62,7 +64,7 @@ describe('ProductCatalog', () => {
       json: () => Promise.resolve(mockProducts),
     });
 
-    renderWithMantine(<ProductCatalog addCart={mockAddCart} cartItems={[]} />);
+    renderWithMantine(<ProductCatalog />);
 
     await waitFor(() => {
       expect(screen.getByText('Test Product 1')).toBeInTheDocument();

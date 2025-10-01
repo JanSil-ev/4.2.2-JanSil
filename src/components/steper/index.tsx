@@ -3,7 +3,6 @@ import { IconMinus, IconPlus } from '@tabler/icons-react';
 import { Badge, Button, Flex } from '@mantine/core';
 import classes from './styles.module.css';
 
-
 export interface SteppersProps {
   onCountChange: (count: number, id?: number) => void;
   initialCount?: number;

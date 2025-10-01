@@ -1,10 +1,13 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, applyMiddleware } from '@reduxjs/toolkit';
 import shoppingSlice from "./slice/CartSlice"
+import productSlice from "./slice/ProductSlice"
+
 
 export const store = configureStore({
     reducer: {
-        shopping: shoppingSlice
-    }
+        shopping: shoppingSlice,
+        products: productSlice
+    },
 })
 
 export type RootState = ReturnType<typeof store.getState>;

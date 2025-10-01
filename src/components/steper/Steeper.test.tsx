@@ -1,7 +1,7 @@
+import { Steppers } from '.';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { MantineProvider } from '@mantine/core';
-import { Steppers } from '.';
 
 function renderWithMantine(ui: React.ReactElement) {
   return render(<MantineProvider>{ui}</MantineProvider>);

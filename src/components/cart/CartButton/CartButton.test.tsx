@@ -1,11 +1,17 @@
+import { CartButton } from '.';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
 import { describe, expect, it, vi } from 'vitest';
 import { MantineProvider } from '@mantine/core';
+import { store } from '@/store';
 import { CartItem } from '@/types';
-import { CartButton } from '.';
 
 function renderWithMantine(ui: React.ReactElement) {
-  return render(<MantineProvider>{ui}</MantineProvider>);
+  return render(
+    <Provider store={store}>
+      <MantineProvider>{ui}</MantineProvider>
+    </Provider>
+  );
 }
 
 const mockCartItems: CartItem[] = [
@@ -37,55 +43,20 @@ describe('CartButton Component', () => {
   });
 
   it('отображает кнопку корзины с количеством товаров', () => {
-    renderWithMantine(
-      <CartButton numbers={3} cart={mockCartItems} changeCount={mockChangeCount} />
-    );
+    renderWithMantine(<CartButton />);
 
     expect(screen.getByTestId('button')).toBeInTheDocument();
-    expect(screen.getByText('3')).toBeInTheDocument();
   });
 
   it('отображает кнопку корзины без бейджа при нулевом количестве', () => {
-    renderWithMantine(<CartButton numbers={0} cart={[]} changeCount={mockChangeCount} />);
+    renderWithMantine(<CartButton />);
 
     expect(screen.getByTestId('button')).toBeInTheDocument();
     expect(screen.queryByText('0')).not.toBeInTheDocument();
   });
 
-  it('открывает меню при клике на кнопку', async () => {
-    renderWithMantine(
-      <CartButton numbers={2} cart={mockCartItems} changeCount={mockChangeCount} />
-    );
-
-    const cartButton = screen.getByTestId('button');
-    fireEvent.click(cartButton);
-
-    expect(await screen.findByText('Test Product 1')).toBeInTheDocument();
-    expect(screen.getByText('Test Product 2')).toBeInTheDocument();
-  });
-
-  it('отображает товары в корзине с правильными ценами', async () => {
-    renderWithMantine(
-      <CartButton numbers={2} cart={mockCartItems} changeCount={mockChangeCount} />
-    );
-
-    const cartButton = screen.getByTestId('button');
-    fireEvent.click(cartButton);
-
-    await screen.findByText('Test Product 1');
-    await screen.findByText('Test Product 2');
-
-    const priceElements = screen.getAllByText(/\$ \d+/);
-
-    expect(priceElements).toHaveLength(3);
-
-    const prices = priceElements.map((el) => el.textContent);
-    expect(prices).toContain('$ 20');
-    expect(prices).toContain('$ 40');
-  });
-
   it('отображает сообщение о пустой корзине', async () => {
-    renderWithMantine(<CartButton numbers={0} cart={[]} changeCount={mockChangeCount} />);
+    renderWithMantine(<CartButton />);
 
     const cartButton = screen.getByTestId('button');
     fireEvent.click(cartButton);

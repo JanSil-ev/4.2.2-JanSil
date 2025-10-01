@@ -1,7 +1,7 @@
 import { AppShell } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { Header } from '../Header';
 import classes from './styles.module.css';
-import { useDisclosure } from '@mantine/hooks';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -18,15 +18,10 @@ export function MainLayout({ children }: MainLayoutProps) {
       className={classes.appShell}
     >
       <AppShell.Header className={classes.headerSection}>
-        <Header 
-          onToggleMenu={toggle} 
-          opened={opened} 
-        />
+        <Header onToggleMenu={toggle} opened={opened} />
       </AppShell.Header>
-      
-      <AppShell.Main className={classes.mainSection}>
-        {children}
-      </AppShell.Main>
+
+      <AppShell.Main className={classes.mainSection}>{children}</AppShell.Main>
     </AppShell>
   );
 }

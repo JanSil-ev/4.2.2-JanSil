@@ -1,39 +1,30 @@
 import { useEffect, useState } from 'react';
-import ky from 'ky';
 import { Center, Flex, Loader } from '@mantine/core';
-import { CardsItem } from '@/types';
-import classes from './styles.module.css';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchProducts } from '@/store/slice/ProductSlice';
 import { ProductCard } from '../ProductCard';
-
-
-
+import classes from './styles.module.css';
 
 export function ProductCatalog() {
-  const [products, setProducts] = useState<CardsItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useAppDispatch();
+  const { data, isLoading, error } = useAppSelector((state) => state.products);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const json = await ky
-          .get('https://res.cloudinary.com/sivadass/raw/upload/v1535817394/json/products.json')
-          .json();
-        setProducts(json as CardsItem[]);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   if (isLoading) {
     return (
       <Center style={{ height: '100vh' }}>
-        <Loader type="Loader" size="xl" variant="dots" data-testid="loader" />
+        <Loader color="green" data-testid="loader"/>
+      </Center>
+    );
+  }
+
+  if (error) {
+    return (
+      <Center style={{ height: '100vh' }}>
+        <div>Error: {error}</div>
       </Center>
     );
   }
@@ -42,7 +33,6 @@ export function ProductCatalog() {
     <>
       <div className={classes.container}>
         <h2 className={classes.title}>Catalog</h2>
-
         <Flex
           gap="md"
           justify="center"
@@ -51,11 +41,8 @@ export function ProductCatalog() {
           wrap="wrap"
           className={classes.flexContainer}
         >
-          {products?.map((p) => (
-            <ProductCard 
-              key={p.id} 
-              {...p}  
-            />
+          {data?.map((p) => (
+            <ProductCard key={p.id} {...p} />
           ))}
         </Flex>
       </div>

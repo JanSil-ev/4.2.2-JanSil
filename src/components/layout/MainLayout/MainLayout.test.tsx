@@ -1,21 +1,27 @@
 import React from 'react';
+import { MainLayout } from '.';
 import { render, screen } from '@test-utils';
+import { Provider } from 'react-redux';
 import { describe, expect, it, vi } from 'vitest';
 import { MantineProvider } from '@mantine/core';
-import { MainLayout } from '.';
+import { store } from '@/store';
 import { CartItem } from '@/types';
 
 // Моки
 vi.mock('../Header/Header', () => ({
-  Header: () => <div data-testid="header">Header Component</div>
+  Header: () => <div data-testid="header">Header Component</div>,
 }));
 
 vi.mock('@mantine/hooks', () => ({
-  useDisclosure: () => [false, { toggle: vi.fn() }]
+  useDisclosure: () => [false, { toggle: vi.fn() }],
 }));
 
 function renderWithMantine(ui: React.ReactElement) {
-  return render(<MantineProvider>{ui}</MantineProvider>);
+  return render(
+    <Provider store={store}>
+      <MantineProvider>{ui}</MantineProvider>
+    </Provider>
+  );
 }
 
 describe('MainLayout component', () => {
@@ -24,21 +30,21 @@ describe('MainLayout component', () => {
 
   it('should рендерит Header компонент', () => {
     renderWithMantine(
-      <MainLayout cart={mockCart} changeCount={mockChangeCount}>
+      <MainLayout>
         <div>Test Content</div>
       </MainLayout>
     );
-    
+
     expect(screen.getByTestId('header')).toBeInTheDocument();
   });
 
   it('should рендерит переданные children', () => {
     renderWithMantine(
-      <MainLayout cart={mockCart} changeCount={mockChangeCount}>
+      <MainLayout>
         <div data-testid="test-child">Test Child Content</div>
       </MainLayout>
     );
-    
+
     expect(screen.getByTestId('test-child')).toBeInTheDocument();
     expect(screen.getByText('Test Child Content')).toBeInTheDocument();
   });

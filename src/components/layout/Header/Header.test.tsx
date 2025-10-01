@@ -4,6 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { MantineProvider } from '@mantine/core';
 import { Header } from './index';
 import { CartItem } from '@/types';
+import { Provider } from 'react-redux';
+import { store } from '@/store';
 
 
 vi.mock('@/components/cart/CartButton/CartButton', () => ({
@@ -13,7 +15,7 @@ vi.mock('@/components/cart/CartButton/CartButton', () => ({
 }));
 
 function renderWithMantine(ui: React.ReactElement) {
-  return render(<MantineProvider>{ui}</MantineProvider>);
+  return render(<Provider store={store}><MantineProvider>{ui}</MantineProvider></Provider>);
 }
 
 describe('Header component', () => {
