@@ -4,7 +4,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
-  base: '/2.3.2-JanSil/',
+  base: '/4.2.2-JanSil/',
   test: {
     globals: true,
     environment: 'jsdom',
